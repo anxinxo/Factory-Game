@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "../Header/SpriteManager.hpp"
+#include "../Header/Map.hpp"
 
 class Game
 {
@@ -12,6 +13,7 @@ private:
     sf::Clock clock;
 
     Sprite_Manager SpriteManager;
+    Map MAP;
 
     void Process_Event();
     void Update();

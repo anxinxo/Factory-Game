@@ -1,7 +1,8 @@
 #include "../Header/Game.hpp"
 
     Game::Game(int WIDTH, int HEIGHT, int FPS, std::string Window_Name)
-    : window(sf::VideoMode(WIDTH, HEIGHT), Window_Name)
+    : window(sf::VideoMode(WIDTH, HEIGHT), Window_Name),
+    MAP(WIDTH, HEIGHT, 20)
     {
         this->window.setFramerateLimit(FPS);
     }
@@ -33,6 +34,8 @@
     void Game::Rendering()
     {
         this->window.clear();
+
+        MAP.drawby(window);
 
         this->window.display();
     }
