@@ -14,5 +14,9 @@ private:
 public:
     Map(int _W, int _H, int _CellSize);
 
+    void HoverCell(sf::Vector2f realPos);
+
+    void Updating();
+
     void drawby(sf::RenderWindow& window);
 };

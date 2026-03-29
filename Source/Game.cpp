@@ -29,6 +29,12 @@
     void Game::Update()
     {
         float delta_time = this->clock.restart().asSeconds();
+        
+        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+        sf::Vector2f realPos = window.mapPixelToCoords(pixelPos);
+
+        MAP.Updating();
+        MAP.HoverCell(realPos);
     }
 
     void Game::Rendering()

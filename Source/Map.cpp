@@ -15,6 +15,27 @@
         }
     }
 
+    void Map::HoverCell(sf::Vector2f realPos)
+    {   
+        int Mcol = realPos.x / Cell_Size;
+        int Mrow = realPos.y / Cell_Size;
+
+        if(Mcol < 0 || Mrow < 0 || Mrow >= ROW || Mcol >= COL) return;
+
+        Grid[Mrow][Mcol] = -1;
+    }
+
+    void Map::Updating()
+    {
+        for(int i = 0; i < ROW; ++i)
+        {
+            for(int j = 0; j < COL; ++j)
+            {
+                if(Grid[i][j] == -1) Grid[i][j] = 0;
+            }
+        }
+    }
+
     void Map::drawby(sf::RenderWindow& window)
     {   
         sf::RectangleShape Cell;
@@ -26,7 +47,10 @@
         for(int i = 0; i < ROW; ++i)
         {
             for(int j = 0; j < COL; ++j)
-            {
+            {   
+                if(Grid[i][j] == -1) Cell.setFillColor(sf::Color::Red);
+                else Cell.setFillColor(sf::Color::Green);
+
                 Cell.setPosition({float(j * Cell_Size), float(i * Cell_Size)});
                 window.draw(Cell);
             }
