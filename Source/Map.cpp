@@ -11,7 +11,9 @@
         for(int i = 0; i < ROW; ++i)
         {
             std::vector<int> c(COL, 0);
-            Grid.emplace_back(c);
+            std::vector<CELL> d(COL, CELL::LAND);
+            Hover.emplace_back(c);
+            Grid.emplace_back(d);
         }
     }
 
@@ -22,7 +24,7 @@
 
         if(Mcol < 0 || Mrow < 0 || Mrow >= ROW || Mcol >= COL) return;
 
-        Grid[Mrow][Mcol] = -1;
+        Hover[Mrow][Mcol] = -1;
     }
 
     void Map::Updating()
@@ -31,7 +33,7 @@
         {
             for(int j = 0; j < COL; ++j)
             {
-                if(Grid[i][j] == -1) Grid[i][j] = 0;
+                if(Hover[i][j] == -1) Hover[i][j] = 0;
             }
         }
     }
@@ -41,15 +43,19 @@
         sf::RectangleShape Cell;
         Cell.setFillColor(sf::Color::Green);
         Cell.setSize({float(Cell_Size), float(Cell_Size)});
-        Cell.setOutlineColor(sf::Color::White);
-        Cell.setOutlineThickness(1);
 
         for(int i = 0; i < ROW; ++i)
         {
             for(int j = 0; j < COL; ++j)
             {   
-                if(Grid[i][j] == -1) Cell.setFillColor(sf::Color::Red);
-                else Cell.setFillColor(sf::Color::Green);
+                if(Hover[i][j] == -1) Cell.setFillColor(sf::Color(210, 40, 40, 95));
+                else
+                {
+                    if(Grid[i][j] == CELL::LAND) Cell.setFillColor(sf::Color(250, 173, 39));
+                    if(Grid[i][j] == CELL::TREE) Cell.setFillColor(sf::Color::Green);
+                    if(Grid[i][j] == CELL::ORE) Cell.setFillColor(sf::Color(128, 128, 128));
+                    if(Grid[i][j] == CELL::WATER) Cell.setFillColor(sf::Color::Blue);
+                }
 
                 Cell.setPosition({float(j * Cell_Size), float(i * Cell_Size)});
                 window.draw(Cell);

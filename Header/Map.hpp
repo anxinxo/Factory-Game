@@ -6,10 +6,20 @@
 class Map
 {
 private:
+
+    enum class CELL
+    {
+        LAND,
+        WATER,
+        TREE,
+        ORE
+    };
+
     int WIDTH, HEIGHT, ROW, COL;
     int Cell_Size;
 
-    std::vector<std::vector<int>> Grid;
+    std::vector<std::vector<int>> Hover;
+    std::vector<std::vector<CELL>> Grid;
 
 public:
     Map(int _W, int _H, int _CellSize);
