@@ -18,13 +18,13 @@ private:
     int WIDTH, HEIGHT, ROW, COL;
     int Cell_Size;
 
-    std::vector<std::vector<int>> Hover;
-    std::vector<std::vector<CELL>> Grid;
+    sf::Vector2i HoverCell;
+    std::vector<std::vector<CELL>> Terrain;
 
 public:
     Map(int _W, int _H, int _CellSize);
 
-    void HoverCell(sf::Vector2f realPos);
+    void Hovering_Cell(sf::Vector2f realPos);
 
     void Updating();
 

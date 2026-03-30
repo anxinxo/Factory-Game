@@ -34,7 +34,7 @@
         sf::Vector2f realPos = window.mapPixelToCoords(pixelPos);
 
         MAP.Updating();
-        MAP.HoverCell(realPos);
+        MAP.Hovering_Cell(realPos);
     }
 
     void Game::Rendering()
