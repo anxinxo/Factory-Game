@@ -5,6 +5,7 @@
 #include "../Header/SpriteManager.hpp"
 #include "../Header/Render.hpp"
 #include "../Header/Map.hpp"
+#include "../Header/WorldGenerator.hpp"
 
 class Game
 {
@@ -14,7 +15,9 @@ private:
     sf::Clock clock;
 
     Sprite_Manager SpriteManager;
-    Renderer RenderMap;    
+    Renderer RenderMap;
+
+    WorldGenerator WORLDGEN;
     Map MAP;
 
     void Process_Event();

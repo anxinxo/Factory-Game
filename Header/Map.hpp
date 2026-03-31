@@ -4,7 +4,8 @@
 #include <vector>
 
 enum class TTYPE
-    {
+    {   
+        NONE,
         GRASS,
         SAND,
         ROCK,
@@ -30,6 +31,8 @@ private:
 public:
     Map(int _W, int _H, int _CellSize);
 
+    bool inBound(int r, int c) const;
+
     sf::Vector2i GetRC() const;
     
     int Get_Cell_Size() const;
@@ -37,4 +40,6 @@ public:
     bool isOccupied(int r, int c) const;
 
     TTYPE getType(int r, int c) const;
+
+    void setType(int r, int c, TTYPE TCELL);
 };

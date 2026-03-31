@@ -10,9 +10,14 @@
 
         for(int i = 0; i < ROW; ++i)
         {
-            std::vector<CELL> d(COL, CELL(false, TTYPE::GRASS));
+            std::vector<CELL> d(COL, CELL(false, TTYPE::NONE));
             Terrain.emplace_back(d);
         }
+    }
+
+    bool Map::inBound(int r, int c) const
+    {   
+        return r >= 0 && c >= 0 && r < ROW && c < COL;
     }
 
     sf::Vector2i Map::GetRC() const
@@ -27,10 +32,21 @@
 
     bool Map::isOccupied(int r, int c) const
     {   
+        if(!inBound(r, c)) return false;
+
         return Terrain[r][c].occupied;
     }
 
     TTYPE Map::getType(int r, int c) const
-    {
+    {   
+        if(!inBound(r, c)) return TTYPE::NONE;
+
         return Terrain[r][c].CellType;
+    }
+
+    void Map::setType(int r, int c, TTYPE TCELL)
+    {   
+        if(!inBound(r, c)) return;
+
+        Terrain[r][c].CellType = TCELL;
     }

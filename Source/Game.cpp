@@ -5,6 +5,8 @@
     MAP(WIDTH, HEIGHT, 20)
     {
         this->window.setFramerateLimit(FPS);
+
+        WORLDGEN.Generate(MAP);
     }
 
     void Game::Run()
