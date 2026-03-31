@@ -32,16 +32,13 @@
         
         sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
         sf::Vector2f realPos = window.mapPixelToCoords(pixelPos);
-
-        MAP.Updating();
-        MAP.Hovering_Cell(realPos);
     }
 
     void Game::Rendering()
     {
         this->window.clear();
 
-        MAP.drawby(window);
+        RenderMap.draw_Map(window, MAP);
 
         this->window.display();
     }

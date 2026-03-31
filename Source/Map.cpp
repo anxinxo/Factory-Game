@@ -10,60 +10,27 @@
 
         for(int i = 0; i < ROW; ++i)
         {
-            std::vector<CELL> d(COL, CELL::LAND);
+            std::vector<CELL> d(COL, CELL(false, TTYPE::GRASS));
             Terrain.emplace_back(d);
         }
     }
 
-    void Map::Hovering_Cell(sf::Vector2f realPos)
-    {   
-        int Mcol = realPos.x / Cell_Size;
-        int Mrow = realPos.y / Cell_Size;
-
-        if(Mcol < 0 || Mrow < 0 || Mrow >= ROW || Mcol >= COL)
-        {
-            HoverCell = {-1, -1};
-        }
-        else
-        {
-            HoverCell = {Mrow, Mcol};
-        }
-    }
-
-    void Map::Updating()
+    sf::Vector2i Map::GetRC() const
     {
-        for(int i = 0; i < ROW; ++i)
-        {
-            for(int j = 0; j < COL; ++j)
-            {
-            }
-        }
+        return sf::Vector2i(ROW, COL);
     }
 
-    void Map::drawby(sf::RenderWindow& window)
+    int Map::Get_Cell_Size() const
+    {
+        return Cell_Size;
+    }
+
+    bool Map::isOccupied(int r, int c) const
     {   
-        sf::RectangleShape Cell;
-        Cell.setFillColor(sf::Color::Green);
-        Cell.setSize({float(Cell_Size), float(Cell_Size)});
+        return Terrain[r][c].occupied;
+    }
 
-        for(int i = 0; i < ROW; ++i)
-        {
-            for(int j = 0; j < COL; ++j)
-            {   
-                if(Terrain[i][j] == CELL::LAND) Cell.setFillColor(sf::Color(250, 173, 39));
-                if(Terrain[i][j] == CELL::TREE) Cell.setFillColor(sf::Color::Green);
-                if(Terrain[i][j] == CELL::ORE) Cell.setFillColor(sf::Color(128, 128, 128));
-                if(Terrain[i][j] == CELL::WATER) Cell.setFillColor(sf::Color::Blue);
-
-                Cell.setPosition({float(j * Cell_Size), float(i * Cell_Size)});
-                window.draw(Cell);
-            }
-        }
-
-        if(HoverCell.x != -1)
-        {
-            Cell.setFillColor(sf::Color(40, 210, 40, 95));
-            Cell.setPosition(float(Cell_Size * HoverCell . y), float(Cell_Size * HoverCell.x));
-            window.draw(Cell);
-        }
+    TTYPE Map::getType(int r, int c) const
+    {
+        return Terrain[r][c].CellType;
     }

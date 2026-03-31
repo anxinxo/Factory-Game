@@ -3,30 +3,38 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
+enum class TTYPE
+    {
+        GRASS,
+        SAND,
+        ROCK,
+        WATER
+    };
+
+    struct CELL
+    {
+        bool occupied;
+        TTYPE CellType;
+
+        CELL(bool _oc, TTYPE _T): occupied(_oc), CellType(_T) {}
+    };
+
 class Map
 {
 private:
-
-    enum class CELL
-    {
-        LAND,
-        WATER,
-        TREE,
-        ORE
-    };
-
     int WIDTH, HEIGHT, ROW, COL;
     int Cell_Size;
 
-    sf::Vector2i HoverCell;
     std::vector<std::vector<CELL>> Terrain;
 
 public:
     Map(int _W, int _H, int _CellSize);
 
-    void Hovering_Cell(sf::Vector2f realPos);
+    sf::Vector2i GetRC() const;
+    
+    int Get_Cell_Size() const;
 
-    void Updating();
+    bool isOccupied(int r, int c) const;
 
-    void drawby(sf::RenderWindow& window);
+    TTYPE getType(int r, int c) const;
 };
