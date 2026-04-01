@@ -16,7 +16,11 @@ private:
     Sprite_Manager SpriteManager;
     Renderer RenderMap;
 
+    int cellSize;
     World WORLD;
+
+    bool Dragging;
+    sf::Vector2i LastMousePos;
 
     void Process_Event();
     void Update();

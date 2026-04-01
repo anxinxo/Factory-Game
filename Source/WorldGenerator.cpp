@@ -1,63 +1,91 @@
 #include "../Header/WorldGenerator.hpp"
 
-    void WorldGenerator::GenerateChunk(Chunk& chunk)
+void WorldGenerator::GenerateChunk(Chunk& chunk)
+{
+    static PerlinNoise Noise(2026);
+
+    for (int y = 0; y < Chunk::SIZE; ++y)
     {
-        static PerlinNoise Noise(2026);
-
-        for (int y = 0; y < Chunk::SIZE; ++y)
+        for (int x = 0; x < Chunk::SIZE; ++x)
         {
-            for (int x = 0; x < Chunk::SIZE; ++x)
+            int wx = chunk.cx * Chunk::SIZE + x;
+            int wy = chunk.cy * Chunk::SIZE + y;
+
+            float fx = (float)wx;
+            float fy = (float)wy;
+
+            // ===== NHẸ domain warp (giữ bờ biển mượt) =====
+            float warp = Noise.noise(fx * 0.0012f, fy * 0.0012f);
+            fx += warp * 12.f;
+            fy += warp * 12.f;
+
+            // ===== CONTINENT =====
+            float continent = Noise.noise(fx * 0.0010f, fy * 0.0010f);
+            continent = (continent + 1.f) / 2.f;
+
+            CELL& cell = chunk.Get(x, y);
+
+            // ===== OCEAN & BEACH (rộng, mượt) =====
+            if (continent < 0.40f)
             {
-                // ===== World cell coord (QUAN TRỌNG) =====
-                int wx = chunk.cx * Chunk::SIZE + x;
-                int wy = chunk.cy * Chunk::SIZE + y;
+                cell.CellType = TTYPE::WATER;
+                continue;
+            }
+            else if (continent < 0.52f) // BEACH RỘNG
+            {
+                cell.CellType = TTYPE::SAND;
+                continue;
+            }
 
-                float fx = wx;
-                float fy = wy;
+            // ===== BIOME NOISE (quyết định sa mạc/cỏ) =====
+            float biome = Noise.noise(fx * 0.0018f, fy * 0.0018f);
+            biome = (biome + 1.f) / 2.f;
 
-                // ===== Domain warp =====
-                float warp = Noise.noise(fx * 0.003f, fy * 0.003f);
-                fx += warp * 120.0f;
-                fy += warp * 120.0f;
+            // ===== TERRAIN =====
+            float terrain = 0;
+            float amp = 1, freq = 1, maxAmp = 0;
 
-                // ===== Continent =====
-                float continent = Noise.noise(fx * 0.004f, fy * 0.004f);
-                continent = (continent + 1.0f) / 2.0f;
+            for (int o = 0; o < 4; ++o)
+            {
+                terrain += Noise.noise(fx * 0.025f * freq, fy * 0.025f * freq) * amp;
+                maxAmp += amp;
+                amp *= 0.5f;
+                freq *= 2.f;
+            }
 
-                // ===== Terrain octave =====
-                float terrain = 0;
-                float amp = 1, freq = 1, maxAmp = 0;
+            terrain /= maxAmp;
+            terrain = (terrain + 1.f) / 2.f;
 
-                for (int o = 0; o < 4; ++o)
-                {
-                    terrain += Noise.noise(fx * 0.06f * freq, fy * 0.06f * freq) * amp;
-                    maxAmp += amp;
-                    amp *= 0.5f;
-                    freq *= 2.0f;
-                }
+            // ===== ROCK NOISE (vừa phải, không quá to) =====
+            float rockNoise = Noise.noise(fx * 0.020f, fy * 0.020f);
+            rockNoise = (rockNoise + 1.f) / 2.f;
 
-                terrain /= maxAmp;
-                terrain = (terrain + 1.0f) / 2.0f;
+            // ===== MOUNTAIN (hiếm) =====
+            if (terrain > 0.86f && rockNoise > 0.65f)
+            {
+                cell.CellType = TTYPE::ROCK;
+                continue;
+            }
 
-                // ===== Detail =====
-                float detail = Noise.noise(fx * 0.25f, fy * 0.25f);
-                detail = (detail + 1.0f) / 2.0f;
+            // ===== BIOME quyết định chính =====
+            bool isDesert = biome < 0.32f;   // vùng sa mạc rất to, rõ ràng
 
-                terrain = terrain * 0.8f + detail * 0.2f;
-
-                // ===== Quyết định tile =====
-                CELL& cell = chunk.Get(x, y);
-
-                if (continent < 0.45f)
-                {
-                    cell.CellType = TTYPE::WATER;
-                }
+            if (isDesert)
+            {
+                // Sa mạc có ít đá
+                if (rockNoise > 0.72f)
+                    cell.CellType = TTYPE::ROCK;
                 else
-                {
-                    if (terrain < 0.38f) cell.CellType = TTYPE::SAND;
-                    else if (terrain < 0.72f) cell.CellType = TTYPE::GRASS;
-                    else cell.CellType = TTYPE::ROCK;
-                }
+                    cell.CellType = TTYPE::SAND;
+            }
+            else
+            {
+                // Đồng cỏ có đá nhiều hơn
+                if (rockNoise > 0.60f)
+                    cell.CellType = TTYPE::ROCK;
+                else
+                    cell.CellType = TTYPE::GRASS;
             }
         }
     }
+}
