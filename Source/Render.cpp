@@ -1,45 +1,36 @@
 #include "../Header/Render.hpp"
 
-    void Renderer::draw_Map(sf::RenderWindow &window, const Map &MAP)
+void Renderer::draw_World(sf::RenderWindow& window, World& WORLD, int cellSize)
+{
+    sf::View view = window.getView();
+    sf::FloatRect visible(
+        view.getCenter() - view.getSize() / 2.f,
+        view.getSize()
+    );
+
+    int startX = visible.left / cellSize - 1;
+    int startY = visible.top  / cellSize - 1;
+    int endX   = (visible.left + visible.width)  / cellSize + 1;
+    int endY   = (visible.top  + visible.height) / cellSize + 1;
+
+    sf::RectangleShape tile({(float)cellSize, (float)cellSize});
+
+    for (int wy = startY; wy <= endY; ++wy)
     {
-        const sf::Vector2i RC = MAP.GetRC();
-        int Size = MAP.Get_Cell_Size();
-        sf::RectangleShape title;
-        title.setSize({(float)Size, (float)Size});
-
-        for(int i = 0; i < RC.x; ++i)
+        for (int wx = startX; wx <= endX; ++wx)
         {
-            for(int j = 0; j < RC.y; ++j)
-            {   
-                switch (MAP.getType(i, j))
-                {
-                    case TTYPE::GRASS:
-                    {
-                        title.setFillColor(sf::Color::Green);
-                        break;
-                    }
+            CELL& cell = WORLD.GetCell(wx, wy);
 
-                    case TTYPE::ROCK:
-                    {
-                        title.setFillColor(sf::Color(120, 120, 120));
-                        break;
-                    }
-
-                    case TTYPE::SAND:
-                    {
-                        title.setFillColor(sf::Color(194, 178, 128));
-                        break;
-                    }
-
-                    case TTYPE::WATER:
-                    {
-                        title.setFillColor(sf::Color::Blue);
-                        break;
-                    }
-                }
-                title.setPosition(j * Size, i * Size);
-
-                window.draw(title);
+            switch (cell.CellType)
+            {
+                case TTYPE::GRASS: tile.setFillColor(sf::Color::Green); break;
+                case TTYPE::ROCK:  tile.setFillColor(sf::Color(120,120,120)); break;
+                case TTYPE::SAND:  tile.setFillColor(sf::Color(194,178,128)); break;
+                case TTYPE::WATER: tile.setFillColor(sf::Color::Blue); break;
             }
+
+            tile.setPosition(wx * cellSize, wy * cellSize);
+            window.draw(tile);
         }
     }
+}

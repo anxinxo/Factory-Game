@@ -4,8 +4,7 @@
 #include <string>
 #include "../Header/SpriteManager.hpp"
 #include "../Header/Render.hpp"
-#include "../Header/Map.hpp"
-#include "../Header/WorldGenerator.hpp"
+#include "../Header/World.hpp"
 
 class Game
 {
@@ -17,8 +16,7 @@ private:
     Sprite_Manager SpriteManager;
     Renderer RenderMap;
 
-    WorldGenerator WORLDGEN;
-    Map MAP;
+    World WORLD;
 
     void Process_Event();
     void Update();

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../Header/Map.hpp"
+#include "../Header/World.hpp"
 #include "../Header/PerlineNoise.hpp"
 
 class WorldGenerator
 {
 public:
-    static void Generate(Map& MAP);
+    static void GenerateChunk(Chunk& chunk);
 };

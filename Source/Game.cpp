@@ -1,12 +1,9 @@
 #include "../Header/Game.hpp"
 
     Game::Game(int WIDTH, int HEIGHT, int FPS, std::string Window_Name)
-    : window(sf::VideoMode(WIDTH, HEIGHT), Window_Name),
-    MAP(WIDTH, HEIGHT, 20)
+    : window(sf::VideoMode(WIDTH, HEIGHT), Window_Name)
     {
         this->window.setFramerateLimit(FPS);
-
-        WORLDGEN.Generate(MAP);
     }
 
     void Game::Run()
@@ -40,7 +37,27 @@
     {
         this->window.clear();
 
-        RenderMap.draw_Map(window, MAP);
+       // LẤY vị trí camera (center view)
+        sf::View view = window.getView();
+        sf::Vector2f center = view.getCenter();
+
+        int cellSize = 20;
+
+        int wx = center.x / cellSize;
+        int wy = center.y / cellSize;
+
+        int cx = wx / Chunk::SIZE;
+        int cy = wy / Chunk::SIZE;
+
+        // YÊU CẦU world tạo chunk quanh camera
+        for (int dx = -3; dx <= 3; ++dx)
+        for (int dy = -3; dy <= 3; ++dy)
+        {
+            WORLD.GetChunk(cx + dx, cy + dy);
+        }
+
+        // Sau đó mới render
+        RenderMap.draw_World(window, WORLD, cellSize);
 
         this->window.display();
     }
