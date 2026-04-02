@@ -5,6 +5,7 @@
     cellSize(32)
     {
         this->window.setFramerateLimit(FPS);
+        BaseViewSize = window.getView().getSize();
     }
 
     void Game::Run()
@@ -25,53 +26,46 @@
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) this->window.close();
 
             // Bắt đầu kéo
-            if(event.type == sf::Event::MouseButtonPressed &&
-            event.mouseButton.button == sf::Mouse::Left)
+            if (event.type == sf::Event::MouseButtonPressed &&
+                event.mouseButton.button == sf::Mouse::Left)
             {
                 Dragging = true;
-                LastMousePos = sf::Mouse::getPosition(window);
+                
+                DragStartView = window.getView();
+
+                sf::Vector2i pixel = sf::Mouse::getPosition(window);
+
+                DragAnchorWorld  = window.mapPixelToCoords(pixel);
+                DragAnchorCenter = DragStartView.getCenter();
             }
 
             // Thả chuột
-            if(event.type == sf::Event::MouseButtonReleased &&
-            event.mouseButton.button == sf::Mouse::Left)
+            if (event.type == sf::Event::MouseButtonReleased &&
+                event.mouseButton.button == sf::Mouse::Left)
             {
                 Dragging = false;
             }
 
-            // Đang kéo
-            if(event.type == sf::Event::MouseMoved && Dragging)
-            {
-                sf::Vector2i newPos = sf::Mouse::getPosition(window);
-                sf::Vector2i delta = LastMousePos - newPos;
-
-                sf::View view = window.getView();
-                view.move((float)delta.x, (float)delta.y);
-                window.setView(view);
-
-                LastMousePos = newPos;
-            }
-
+            //zoom in / out
             if (event.type == sf::Event::MouseWheelScrolled)
             {
-                sf::View view = window.getView();
-
                 // Tọa độ world trước khi zoom (tại vị trí chuột)
                 sf::Vector2i pixel = sf::Mouse::getPosition(window);
-                sf::Vector2f before = window.mapPixelToCoords(pixel);
 
-                // Hệ số zoom
-                if (event.mouseWheelScroll.delta > 0)
-                    view.zoom(0.9f);   // zoom in
+                sf::View view = window.getView();
+                sf::Vector2f before = window.mapPixelToCoords(pixel, view);
+
+                if(event.mouseWheelScroll.delta > 0) 
+                    zoomLevel /= zoomStep;
                 else
-                    view.zoom(1.1f);   // zoom out
+                    zoomLevel *= zoomStep;  
+                
+                zoomLevel = std::clamp(zoomLevel, MinZoom, MaxZoom);
 
+                view.setSize(BaseViewSize * zoomLevel);
                 window.setView(view);
 
-                // Tọa độ world sau khi zoom
                 sf::Vector2f after = window.mapPixelToCoords(pixel);
-
-                // Dịch camera để điểm dưới chuột giữ nguyên
                 sf::Vector2f offset = before - after;
                 view.move(offset);
                 window.setView(view);
@@ -83,8 +77,22 @@
     {
         float delta_time = this->clock.restart().asSeconds();
         
-        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
-        sf::Vector2f realPos = window.mapPixelToCoords(pixelPos);
+        if (Dragging)
+        {
+            sf::Vector2i pixel = sf::Mouse::getPosition(window);
+            sf::Vector2f worldPos = window.mapPixelToCoords(pixel, DragStartView);
+
+            sf::Vector2f offset = DragAnchorWorld - worldPos;
+
+            sf::View view = DragStartView;
+            view.setCenter(DragAnchorCenter + offset);
+            window.setView(view);
+        }
+        else
+        {
+            HasLast = false;
+        }
+
     }
 
     void Game::Rendering()

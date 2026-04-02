@@ -20,7 +20,17 @@ private:
     World WORLD;
 
     bool Dragging;
-    sf::Vector2i LastMousePos;
+    bool HasLast;
+    sf::Vector2f LastMouseWorldPos;
+    sf::Vector2f DragAnchorWorld;
+    sf::Vector2f DragAnchorCenter;
+    sf::View DragStartView;
+
+    float zoomLevel = 1.0f;
+    const float zoomStep = 1.1f;
+    const float MinZoom = 0.2f;
+    const float MaxZoom = 5.0f;
+    sf::Vector2f BaseViewSize;
 
     void Process_Event();
     void Update();

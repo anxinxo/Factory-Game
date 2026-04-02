@@ -13,24 +13,32 @@ void Renderer::draw_World(sf::RenderWindow& window, World& WORLD, int cellSize)
     int endX   = (visible.left + visible.width)  / cellSize + 1;
     int endY   = (visible.top  + visible.height) / cellSize + 1;
 
-    sf::RectangleShape tile({(float)cellSize, (float)cellSize});
+    sf::VertexArray vertices(sf::Quads);
 
     for (int wy = startY; wy <= endY; ++wy)
     {
         for (int wx = startX; wx <= endX; ++wx)
         {
             CELL& cell = WORLD.GetCell(wx, wy);
-
+            
+            sf::Color color;
             switch (cell.CellType)
             {
-                case TTYPE::GRASS: tile.setFillColor(sf::Color::Green); break;
-                case TTYPE::ROCK:  tile.setFillColor(sf::Color(120,120,120)); break;
-                case TTYPE::SAND:  tile.setFillColor(sf::Color(194,178,128)); break;
-                case TTYPE::WATER: tile.setFillColor(sf::Color::Blue); break;
+                case TTYPE::GRASS: color = sf::Color::Green; break;
+                case TTYPE::ROCK:  color = sf::Color(120,120,120); break;
+                case TTYPE::SAND:  color = sf::Color(194,178,128); break;
+                case TTYPE::WATER: color = sf::Color::Blue; break;
             }
 
-            tile.setPosition(wx * cellSize, wy * cellSize);
-            window.draw(tile);
+            float x = wx * cellSize;
+            float y = wy * cellSize;
+
+            vertices.append(sf::Vertex({x, y}, color));
+            vertices.append(sf::Vertex({x + cellSize, y}, color));
+            vertices.append(sf::Vertex({x + cellSize, y + cellSize}, color));
+            vertices.append(sf::Vertex({x, y + cellSize}, color));
         }
     }
+
+    window.draw(vertices);
 }
