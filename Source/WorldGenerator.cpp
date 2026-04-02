@@ -1,8 +1,12 @@
 #include "../Header/WorldGenerator.hpp"
 
-void WorldGenerator::GenerateChunk(Chunk& chunk)
+void WorldGenerator::GenerateChunk(Chunk& chunk, long long seed)
 {
-    static PerlinNoise Noise(2026);
+    static PerlinNoise Noise(seed);
+
+    const float seaLevel = 0.44f;
+    const float beachLevel = 0.48f;
+    const float plateauLevel = 0.85f;
 
     for (int y = 0; y < Chunk::SIZE; ++y)
     {
@@ -14,77 +18,96 @@ void WorldGenerator::GenerateChunk(Chunk& chunk)
             float fx = (float)wx;
             float fy = (float)wy;
 
-            // ===== NHẸ domain warp (giữ bờ biển mượt) =====
-            float warp = Noise.noise(fx * 0.0012f, fy * 0.0012f);
-            fx += warp * 12.f;
-            fy += warp * 12.f;
-
-            // ===== CONTINENT =====
-            float continent = Noise.noise(fx * 0.0010f, fy * 0.0010f);
-            continent = (continent + 1.f) / 2.f;
-
             CELL& cell = chunk.Get(x, y);
 
-            // ===== OCEAN & BEACH (rộng, mượt) =====
-            if (continent < 0.40f)
+            // ===== HEIGHT (multi-frequency) =====
+            float h =
+                Noise.noise(fx * 0.002f, fy * 0.002f) * 0.55f + // shape khi zoom xa
+                Noise.noise(fx * 0.010f, fy * 0.010f) * 0.25f + // vùng lớn
+                Noise.noise(fx * 0.050f, fy * 0.050f) * 0.15f + // địa hình
+                Noise.noise(fx * 0.120f, fy * 0.120f) * 0.05f;  // chi tiết
+
+            h = (h + 1.f) / 2.f;
+
+            // ===== SEA & BEACH =====
+            if (h < seaLevel)
             {
                 cell.CellType = TTYPE::WATER;
                 continue;
             }
-            else if (continent < 0.52f) // BEACH RỘNG
+            if (h < beachLevel)
             {
                 cell.CellType = TTYPE::SAND;
                 continue;
             }
 
-            // ===== BIOME NOISE (quyết định sa mạc/cỏ) =====
-            float biome = Noise.noise(fx * 0.0018f, fy * 0.0018f);
-            biome = (biome + 1.f) / 2.f;
+            // ===== TEMPERATURE (multi-frequency) =====
+            float temp =
+                Noise.noise(fx * 0.003f, fy * 0.003f) * 0.6f +
+                Noise.noise(fx * 0.020f, fy * 0.020f) * 0.3f +
+                Noise.noise(fx * 0.080f, fy * 0.080f) * 0.1f;
 
-            // ===== TERRAIN =====
-            float terrain = 0;
-            float amp = 1, freq = 1, maxAmp = 0;
+            temp = (temp + 1.f) / 2.f;
 
-            for (int o = 0; o < 4; ++o)
+            // ===== ROCK DETAIL =====
+
+            float rockMacro = Noise.noise(fx * 0.015f, fy * 0.015f); // vùng đá to
+            float rockMicro = Noise.noise(fx * 0.09f,  fy * 0.09f);  // chi tiết
+
+            rockMacro = (rockMacro + 1.f) / 2.f;
+            rockMicro = (rockMicro + 1.f) / 2.f;
+
+            float rock = rockMacro * 0.65f + rockMicro * 0.35f;
+
+            float rockThreshold = 0.78f; // mặc định rất khó có đá
+
+            // cao nguyên → nhiều đá
+            if (h > plateauLevel)
+                rockThreshold -= 0.18f;
+
+            // sa mạc → cực ít đá
+            if (temp > 0.68f)
+                rockThreshold += 0.06f;
+
+            // rừng → ít đá
+            if (temp < 0.32f)
+                rockThreshold += 0.02f;
+
+            // nếu đang nằm trong bãi đá macro → dễ ra đá hơn
+            if (rockMacro > 0.60f)
+                rockThreshold -= 0.10f;
+
+            // ===== PLATEAU (cao, nhiều đá, khô) =====
+            if (h > plateauLevel)
             {
-                terrain += Noise.noise(fx * 0.025f * freq, fy * 0.025f * freq) * amp;
-                maxAmp += amp;
-                amp *= 0.5f;
-                freq *= 2.f;
+                if (rock > 0.75f)
+                    cell.CellType = TTYPE::ROCK;
+                else
+                    cell.CellType = TTYPE::GRASS;
+                continue;
             }
 
-            terrain /= maxAmp;
-            terrain = (terrain + 1.f) / 2.f;
-
-            // ===== ROCK NOISE (vừa phải, không quá to) =====
-            float rockNoise = Noise.noise(fx * 0.020f, fy * 0.020f);
-            rockNoise = (rockNoise + 1.f) / 2.f;
-
-            // ===== MOUNTAIN (hiếm) =====
-            if (terrain > 0.86f && rockNoise > 0.65f)
+            if (rock > rockThreshold)
             {
                 cell.CellType = TTYPE::ROCK;
                 continue;
             }
 
-            // ===== BIOME quyết định chính =====
-            bool isDesert = biome < 0.32f;   // vùng sa mạc rất to, rõ ràng
-
-            if (isDesert)
+            // ===== PLATEAU =====
+            if (h > plateauLevel)
             {
-                // Sa mạc có ít đá
-                if (rockNoise > 0.72f)
-                    cell.CellType = TTYPE::ROCK;
-                else
-                    cell.CellType = TTYPE::SAND;
+                cell.CellType = TTYPE::GRASS;
+                continue;
+            }
+
+            // ===== BIOME theo nhiệt độ =====
+            if (temp > 0.68f)
+            {
+                cell.CellType = TTYPE::SAND;
             }
             else
             {
-                // Đồng cỏ có đá nhiều hơn
-                if (rockNoise > 0.60f)
-                    cell.CellType = TTYPE::ROCK;
-                else
-                    cell.CellType = TTYPE::GRASS;
+                cell.CellType = TTYPE::GRASS;
             }
         }
     }

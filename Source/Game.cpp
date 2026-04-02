@@ -2,6 +2,7 @@
 
     Game::Game(int WIDTH, int HEIGHT, int FPS, std::string Window_Name)
     : window(sf::VideoMode(WIDTH, HEIGHT), Window_Name),
+    WORLD(28),
     cellSize(32)
     {
         this->window.setFramerateLimit(FPS);

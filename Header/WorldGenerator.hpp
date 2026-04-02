@@ -6,5 +6,5 @@
 class WorldGenerator
 {
 public:
-    static void GenerateChunk(Chunk& chunk);
+    static void GenerateChunk(Chunk& chunk, long long seed);
 };

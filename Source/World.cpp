@@ -1,5 +1,7 @@
 #include "../Header/World.hpp"
 
+    World::World(long long _seed): seed(_seed) {}
+
     long long World::Hash(int x, int y) const
     {
         return ( (long long)x << 32 ) ^ (long long)y;
@@ -14,7 +16,7 @@
         {
             auto [iter, _] = chunks.emplace(h, Chunk(cx, cy));
 
-            WorldGenerator::GenerateChunk(iter->second);
+            WorldGenerator::GenerateChunk(iter->second, seed);
 
             return iter->second;
         }
@@ -31,4 +33,9 @@
         int ly = (wy % Chunk::SIZE + Chunk::SIZE) % Chunk::SIZE;
 
         return GetChunk(cx, cy).Get(lx, ly);
+    }
+
+    long long World::getSeed() const
+    {
+        return seed;
     }
