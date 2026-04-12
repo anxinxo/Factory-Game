@@ -1,41 +1,47 @@
 #include "../Header/World.hpp"
 
-    World::World(long long _seed): seed(_seed) {}
+World::World(long long _seed): seed(_seed) {}
 
-    long long World::Hash(int x, int y) const
+long long World::Hash(int x, int y) const
+{
+    return ( (long long)x << 32 ) ^ (long long)y;
+}
+
+Chunk& World::GetChunk(int cx, int cy)
+{
+    long long h = Hash(cx, cy);
+
+    auto it = chunks.find(h);
+    if (it == chunks.end())
     {
-        return ( (long long)x << 32 ) ^ (long long)y;
+        auto [iter, _] = chunks.emplace(h, Chunk(cx, cy));
+
+        WorldGenerator::GenerateChunk(iter->second, seed);
+
+        return iter->second;
     }
 
-    Chunk& World::GetChunk(int cx, int cy)
-    {
-        long long h = Hash(cx, cy);
+    return it->second;
+}
 
-        auto it = chunks.find(h);
-        if (it == chunks.end())
-        {
-            auto [iter, _] = chunks.emplace(h, Chunk(cx, cy));
+CELL& World::GetCell(int wx, int wy)
+{
+    int cx = floor((float)wx / Chunk::SIZE);
+    int cy = floor((float)wy / Chunk::SIZE);
 
-            WorldGenerator::GenerateChunk(iter->second, seed);
+    int lx = (wx % Chunk::SIZE + Chunk::SIZE) % Chunk::SIZE;
+    int ly = (wy % Chunk::SIZE + Chunk::SIZE) % Chunk::SIZE;
 
-            return iter->second;
-        }
+    return GetChunk(cx, cy).Get(lx, ly);
+}
 
-        return it->second;
-    }
+bool World::HasChunk(int cx, int cy) const
+{
+    long long key = Hash(cx, cy);
+    return chunks.find(key) != chunks.end();
+}
 
-    CELL& World::GetCell(int wx, int wy)
-    {
-        int cx = floor((float)wx / Chunk::SIZE);
-        int cy = floor((float)wy / Chunk::SIZE);
-
-        int lx = (wx % Chunk::SIZE + Chunk::SIZE) % Chunk::SIZE;
-        int ly = (wy % Chunk::SIZE + Chunk::SIZE) % Chunk::SIZE;
-
-        return GetChunk(cx, cy).Get(lx, ly);
-    }
-
-    long long World::getSeed() const
-    {
-        return seed;
-    }
+long long World::getSeed() const
+{
+    return seed;
+}

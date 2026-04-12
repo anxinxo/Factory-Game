@@ -2,9 +2,12 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <iostream>
 #include "../Header/SpriteManager.hpp"
 #include "../Header/Render.hpp"
 #include "../Header/World.hpp"
+#include "../Header/MouseWorld.hpp"
+#include "../Header/HoverSystem.hpp"
 
 class Game
 {
@@ -16,8 +19,10 @@ private:
     Sprite_Manager SpriteManager;
     Renderer RenderMap;
 
-    int cellSize;
+    int TILE_SIZE;
     World WORLD;
+    MouseWorld MOUSEWORLD;
+    HoverSystem HOVERSYSTEM;
 
     bool Dragging;
     bool HasLast;
@@ -29,7 +34,7 @@ private:
     float zoomLevel = 1.0f;
     const float zoomStep = 1.1f;
     const float MinZoom = 0.2f;
-    const float MaxZoom = 5.0f;
+    const float MaxZoom = 7.0f;
     sf::Vector2f BaseViewSize;
 
     void Process_Event();

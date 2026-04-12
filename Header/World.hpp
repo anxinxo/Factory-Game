@@ -13,6 +13,7 @@ public:
 
     Chunk& GetChunk(int cx, int cy);
     CELL& GetCell(int wx, int wy);
+    bool HasChunk(int cx, int cy) const;
 
     long long getSeed() const;
 private:

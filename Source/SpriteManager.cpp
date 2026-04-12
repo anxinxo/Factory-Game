@@ -1,32 +1,32 @@
 #include "../Header/SpriteManager.hpp"
 
-    void Sprite_Manager::LoadTexture(const std::string& Name, const std::string& path)
+void Sprite_Manager::LoadTexture(const std::string& Name, const std::string& path)
+{
+    if(textures.find(Name) != textures.end()) return;
+
+    std::shared_ptr<sf::Texture> texture = std::make_shared<sf::Texture>();
+
+    if(!texture->loadFromFile(path))
     {
-        if(textures.find(Name) != textures.end()) return;
-
-        std::shared_ptr<sf::Texture> texture = std::make_shared<sf::Texture>();
-
-        if(!texture->loadFromFile(path))
-        {
-            std::cout << "NGU NHU CHO DCM";
-            return;
-        }
-
-        textures[Name] = texture;
+        std::cout << "NGU NHU CHO DCM";
+        return;
     }
 
-    std::shared_ptr<sf::Texture> Sprite_Manager::GetTexture(const std::string& Name)
-    {
-        if(textures.find(Name) == textures.end())
-        {
-            std::cout << "Co del, m lua tao a";
-            return nullptr;
-        }
+    textures[Name] = texture;
+}
 
-        return textures[Name];
+std::shared_ptr<sf::Texture> Sprite_Manager::GetTexture(const std::string& Name)
+{
+    if(textures.find(Name) == textures.end())
+    {
+        std::cout << "Co del, m lua tao a";
+        return nullptr;
     }
 
-    bool Sprite_Manager::Exist(const std::string& Name) const
-    {
-        return textures.find(Name) != textures.end();
-    }
+    return textures[Name];
+}
+
+bool Sprite_Manager::Exist(const std::string& Name) const
+{
+    return textures.find(Name) != textures.end();
+}
