@@ -1,4 +1,4 @@
-#include "../Header/SpriteManager.hpp"
+#include "../rendering/SpriteManager.hpp"
 
 void Sprite_Manager::LoadTexture(const std::string& Name, const std::string& path)
 {

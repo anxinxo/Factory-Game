@@ -3,11 +3,11 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <iostream>
-#include "../Header/SpriteManager.hpp"
-#include "../Header/Render.hpp"
-#include "../Header/World.hpp"
-#include "../Header/MouseWorld.hpp"
-#include "../Header/HoverSystem.hpp"
+#include "../rendering/SpriteManager.hpp"
+#include "../rendering/Render.hpp"
+#include "../core/World.hpp"
+#include "../input/MouseWorld.hpp"
+#include "../input/HoverSystem.hpp"
 
 class Game
 {
@@ -37,6 +37,7 @@ private:
     const float MaxZoom = 7.0f;
     sf::Vector2f BaseViewSize;
 
+    void Fix_view();
     void Process_Event();
     void Update();
     void Rendering();

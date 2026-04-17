@@ -1,8 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "../Header/World.hpp"
-#include "../Header/HoverSystem.hpp"
+#include "../core/World.hpp"
+#include "../input/HoverSystem.hpp"
 
 class Renderer
 {

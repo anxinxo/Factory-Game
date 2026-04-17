@@ -1,4 +1,4 @@
-#include "../Header/Chunk.hpp"
+#include "../terrain/Chunk.hpp"
 
 Chunk::Chunk(int _cx, int _cy): cx(_cx), cy(_cy) {}
 

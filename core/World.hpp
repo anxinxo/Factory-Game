@@ -2,14 +2,19 @@
 
 #include <unordered_map>
 #include <cmath>
-#include "../Header/Chunk.hpp"
-#include "../Header/WorldGenerator.hpp"
+#include "../terrain/Chunk.hpp"
+#include "../terrain/WorldGenerator.hpp"
 
 class World
 {
+private:
+    sf::View view;
 public:
 
-    World(long long _seed); 
+    World(long long _seed, sf::Vector2u windowSize);
+    
+    void FixView(sf::RenderWindow& window);
+    sf::View& GetView();
 
     Chunk& GetChunk(int cx, int cy);
     CELL& GetCell(int wx, int wy);
