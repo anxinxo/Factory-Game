@@ -17,6 +17,7 @@ enum class BIOME
     NONE,
     PLAINS,
     DESERT,
+    ROCKY_MOUNTAIN,
     BEACH,
     OCEAN
 };
@@ -28,15 +29,18 @@ struct CELL
     BIOME Biome;
     uint8_t energy;
 
-    float height = 0.f;
-    float temp = 0.f;
-    float rock_density = 0.f;
+    float height;
+    float temp;
+    float rock_density;
     
     CELL()
     : occupied(false),
       CellType(TTYPE::NONE),
       Biome(BIOME::NONE),
-      energy(0) 
+      energy(0.f),
+      height(0.f),
+      temp(0.f),
+      rock_density(0.f) 
     {}
 };
 

@@ -109,20 +109,41 @@ void Game::Update()
         debugTimer = 0.f;
         system("cls");
 
-        sf::Vector2f Mpos = MOUSEWORLD.getWorldPos();
-        sf::Vector2i Cpos = MOUSEWORLD.getChunkPos();
-        sf::Vector2i Tpos = MOUSEWORLD.getTilePos();
+        // Vị trí chuột trong world (pixel)
+        sf::Vector2f wpos = MOUSEWORLD.getWorldPos();
 
-        std::cout << "Mouse: " << Mpos.x << " " << Mpos.y << '\n';
+        // World tile
+        int worldTileX = (int)(wpos.x / TILE_SIZE);
+        int worldTileY = (int)(wpos.y / TILE_SIZE);
 
-        if (WORLD.HasChunk(Cpos.x, Cpos.y))
+        // Chunk chứa tile đó
+        int chunkX = worldTileX / Chunk::SIZE;
+        int chunkY = worldTileY / Chunk::SIZE;
+
+        // Tile local trong chunk (quan trọng)
+        int localX = ((worldTileX % Chunk::SIZE) + Chunk::SIZE) % Chunk::SIZE;
+        int localY = ((worldTileY % Chunk::SIZE) + Chunk::SIZE) % Chunk::SIZE;
+
+        std::cout << "WorldPos: " << wpos.x << " " << wpos.y << '\n';
+        std::cout << "WorldTile: " << worldTileX << " " << worldTileY << '\n';
+        std::cout << "Chunk: " << chunkX << " " << chunkY << '\n';
+        std::cout << "LocalTile: " << localX << " " << localY << "\n\n";
+
+        if (WORLD.HasChunk(chunkX, chunkY))
         {
-            Chunk& chunk = WORLD.GetChunk(Cpos.x, Cpos.y);
-            CELL& cell = chunk.Get(Tpos.x, Tpos.y);
+            Chunk& chunk = WORLD.GetChunk(chunkX, chunkY);
+            CELL& cell = chunk.Get(localX, localY);
 
-            std::cout << "CellType: " << chunk.GetCellType(Tpos.x, Tpos.y) << '\n';
-            std::cout << "Biome: " << chunk.GetCellBiome(Tpos.x, Tpos.y) << '\n';
-            std::cout << "Energy: " << cell.energy << "\n\n";
+            std::cout << "CellType: " << chunk.GetCellType(localX, localY) << '\n';
+            std::cout << "Biome: " << chunk.GetCellBiome(localX, localY) << '\n';
+            std::cout << "Energy: " << cell.energy << '\n';
+            std::cout << "Height: " << cell.height << '\n';
+            std::cout << "Temp: " << cell.temp << '\n';
+            std::cout << "Rock: " << cell.rock_density << "\n";
+        }
+        else
+        {
+            std::cout << "Chunk not generated yet.\n";
         }
     }
 }

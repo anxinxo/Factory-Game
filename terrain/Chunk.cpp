@@ -27,6 +27,7 @@ std::string Chunk::GetCellBiome(int x, int y)
     if(t == BIOME::NONE) return "Unknow";
     if(t == BIOME::PLAINS) return "Plain";
     if(t == BIOME::BEACH) return "Beach";
+    if(t == BIOME::ROCKY_MOUNTAIN) return "Rocky mountain";
     if(t == BIOME::OCEAN) return "Ocean";
     if(t == BIOME::DESERT) return "Desert";
 
