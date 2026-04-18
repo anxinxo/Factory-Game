@@ -3,11 +3,11 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <iostream>
-#include "../rendering/SpriteManager.hpp"
-#include "../rendering/Render.hpp"
-#include "../core/World.hpp"
-#include "../input/MouseWorld.hpp"
-#include "../input/HoverSystem.hpp"
+#include "rendering/SpriteManager.hpp"
+#include "rendering/Render.hpp"
+#include "core/World.hpp"
+#include "input/MouseWorld.hpp"
+#include "input/HoverSystem.hpp"
 
 class Game
 {

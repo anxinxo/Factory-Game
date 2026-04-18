@@ -1,4 +1,4 @@
-#include "../rendering/Render.hpp"
+#include "rendering/Render.hpp"
 
 void Renderer::draw_World(sf::RenderWindow& window, World& WORLD, int TILE_SIZE)
 {   

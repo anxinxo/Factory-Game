@@ -1,4 +1,4 @@
-#include "../core/Game.hpp"
+#include "core/Game.hpp"
 
 Game::Game(int WIDTH, int HEIGHT, int FPS, std::string Window_Name)
 : window(sf::VideoMode(WIDTH, HEIGHT), Window_Name),
@@ -43,8 +43,7 @@ void Game::Process_Event()
             DragStartView = WORLD.GetView();
 
             sf::Vector2i pixel = sf::Mouse::getPosition(window);
-
-            DragAnchorWorld  = window.mapPixelToCoords(pixel);
+            DragAnchorWorld = window.mapPixelToCoords(pixel, DragStartView);
             DragAnchorCenter = DragStartView.getCenter();
         }
 
@@ -100,13 +99,32 @@ void Game::Update()
     MOUSEWORLD.Update(window, WORLD.GetView(), TILE_SIZE, 32);
     HOVERSYSTEM.Update(MOUSEWORLD, WORLD, 1, 1, 1, 1, true);
     
-    sf::Vector2f Mpos = MOUSEWORLD.getWorldPos();
-    sf::Vector2i Cpos = MOUSEWORLD.getChunkPos();
-    sf::Vector2i Tpos = MOUSEWORLD.getTilePos();
-    system("cls");
-    std::cout << "Mouse Position: " << Mpos.x << " " << Mpos.y << '\n';
-    std::cout << "Chunk Position: " << Cpos.x << " " << Cpos.y << '\n';
-    std::cout << "Tile Position: " << Tpos.x << " " << Tpos.y << '\n';
+    //==== DEBUGGING ====//
+
+    static float debugTimer = 0.f;
+    debugTimer += delta_time;
+
+    if (debugTimer > 0.3f)
+    {
+        debugTimer = 0.f;
+        system("cls");
+
+        sf::Vector2f Mpos = MOUSEWORLD.getWorldPos();
+        sf::Vector2i Cpos = MOUSEWORLD.getChunkPos();
+        sf::Vector2i Tpos = MOUSEWORLD.getTilePos();
+
+        std::cout << "Mouse: " << Mpos.x << " " << Mpos.y << '\n';
+
+        if (WORLD.HasChunk(Cpos.x, Cpos.y))
+        {
+            Chunk& chunk = WORLD.GetChunk(Cpos.x, Cpos.y);
+            CELL& cell = chunk.Get(Tpos.x, Tpos.y);
+
+            std::cout << "CellType: " << chunk.GetCellType(Tpos.x, Tpos.y) << '\n';
+            std::cout << "Biome: " << chunk.GetCellBiome(Tpos.x, Tpos.y) << '\n';
+            std::cout << "Energy: " << cell.energy << "\n\n";
+        }
+    }
 }
 
 void Game::Rendering()
