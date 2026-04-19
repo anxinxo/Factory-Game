@@ -6,10 +6,9 @@
         "${workspaceFolder}/**",
         "${workspaceFolder}/libs/SFML/include"
       ],
-      "compilerPath": "D:/mingw64/bin/g++.exe",
-      "cStandard": "c17",
-      "cppStandard": "c++17",
-      "intelliSenseMode": "windows-gcc-x64"
+      "compilerPath": "g++",
+      "intelliSenseMode": "windows-gcc-x64",
+      "cppStandard": "gnu++17"
     }
   ],
   "version": 4
