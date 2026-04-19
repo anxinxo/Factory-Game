@@ -1,0 +1,7 @@
+# Keep original line endings for third-party libs
+libs/SFML/** -text
+
+# Your source code uses LF
+*.cpp text eol=lf
+*.hpp text eol=lf
+*.h   text eol=lf

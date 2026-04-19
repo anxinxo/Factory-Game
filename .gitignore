@@ -1,31 +1,29 @@
-# Build folders
-build/
-bin/
-out/
+# ===== SFML vendored (do not track) =====
+libs/SFML/
 
-# Executables
-*.exe
-*.out
+# ===== Windows junk =====
+Thumbs.db
+Desktop.ini
 
-# Object files
-*.o
-*.obj
+# ===== Compiler cache / deps =====
+*.d
+*.gch
 
-# Libraries
-*.dll
-*.so
+# ===== Debug symbols =====
+*.pdb
 
-# Logs
-*.log
+# ===== Temporary / backups =====
+*.tmp
+*.bak
+*.swp
 
-# VSCode
-.vscode/
+# ===== VSCode C/C++ extension cache =====
+.ipch/
 
-# CMake
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
+# ===== MinGW / GCC artifacts =====
+*.a
+*.lib
 
-# SFML copied dlls
-*.dll
+# ===== Test / scratch =====
+sandbox/
+temp/
