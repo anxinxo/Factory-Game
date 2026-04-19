@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "core/Game.hpp"
+#include <core/Game.hpp>
 
 const int WIDTH = 1280;
 const int HEIGHT = 720;

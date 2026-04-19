@@ -1,4 +1,4 @@
-#include "core/Game.hpp"
+#include <core/Game.hpp>
 
 Game::Game(int WIDTH, int HEIGHT, int FPS, std::string Window_Name)
 : window(sf::VideoMode(WIDTH, HEIGHT), Window_Name),
@@ -113,14 +113,14 @@ void Game::Update()
         sf::Vector2f wpos = MOUSEWORLD.getWorldPos();
 
         // World tile
-        int worldTileX = (int)(wpos.x / TILE_SIZE);
-        int worldTileY = (int)(wpos.y / TILE_SIZE);
+        int worldTileX = (int)std::floor(wpos.x / TILE_SIZE);
+        int worldTileY = (int)std::floor(wpos.y / TILE_SIZE);
 
         // Chunk chứa tile đó
-        int chunkX = worldTileX / Chunk::SIZE;
-        int chunkY = worldTileY / Chunk::SIZE;
+        int chunkX = floorDiv(worldTileX, Chunk::SIZE);
+        int chunkY = floorDiv(worldTileY, Chunk::SIZE);
 
-        // Tile local trong chunk (quan trọng)
+        // Tile local trong chunk (bạn làm đúng rồi)
         int localX = ((worldTileX % Chunk::SIZE) + Chunk::SIZE) % Chunk::SIZE;
         int localY = ((worldTileY % Chunk::SIZE) + Chunk::SIZE) % Chunk::SIZE;
 

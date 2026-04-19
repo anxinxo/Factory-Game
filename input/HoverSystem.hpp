@@ -1,8 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "core/World.hpp"
-#include "input/MouseWorld.hpp"
+#include <core/World.hpp>
+#include <input/MouseWorld.hpp>
 #include <vector>
 
 class HoverSystem

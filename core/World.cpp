@@ -1,4 +1,4 @@
-#include "core/World.hpp"
+#include <core/World.hpp>
 
 World::World(long long _seed, sf::Vector2u windowSize): seed(_seed) 
 {

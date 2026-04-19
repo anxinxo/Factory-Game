@@ -1,4 +1,4 @@
-#include "input/MouseWorld.hpp"
+#include <input/MouseWorld.hpp>
 
 void MouseWorld::Update(const sf::RenderWindow& window, const sf::View& view, int TILE_SIZE, int CHUNK_SIZE)
 {

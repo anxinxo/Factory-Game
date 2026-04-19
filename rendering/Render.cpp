@@ -1,17 +1,18 @@
-#include "rendering/Render.hpp"
+#include <rendering/Render.hpp>
 
 void Renderer::draw_World(sf::RenderWindow& window, World& WORLD, int TILE_SIZE)
-{   
+{
     sf::View view = window.getView();
-    sf::FloatRect visible(
-        view.getCenter() - view.getSize() / 2.f,
-        view.getSize()
-    );
 
-    int startX = visible.left / TILE_SIZE - 1;
-    int startY = visible.top  / TILE_SIZE - 1;
-    int endX   = (visible.left + visible.width)  / TILE_SIZE + 1;
-    int endY   = (visible.top  + visible.height) / TILE_SIZE + 1;
+    // Lấy rect nhìn thấy trong world
+    sf::Vector2f topLeft     = view.getCenter() - view.getSize() / 2.f;
+    sf::Vector2f bottomRight = view.getCenter() + view.getSize() / 2.f;
+
+    // Dùng floor cho tile âm
+    int startX = static_cast<int>(std::floor(topLeft.x     / TILE_SIZE)) - 1;
+    int startY = static_cast<int>(std::floor(topLeft.y     / TILE_SIZE)) - 1;
+    int endX   = static_cast<int>(std::floor(bottomRight.x / TILE_SIZE)) + 1;
+    int endY   = static_cast<int>(std::floor(bottomRight.y / TILE_SIZE)) + 1;
 
     sf::VertexArray vertices(sf::Quads);
 
@@ -20,7 +21,7 @@ void Renderer::draw_World(sf::RenderWindow& window, World& WORLD, int TILE_SIZE)
         for (int wx = startX; wx <= endX; ++wx)
         {
             CELL& cell = WORLD.GetCell(wx, wy);
-            
+
             sf::Color color;
             switch (cell.CellType)
             {
@@ -30,8 +31,8 @@ void Renderer::draw_World(sf::RenderWindow& window, World& WORLD, int TILE_SIZE)
                 case TTYPE::WATER: color = sf::Color::Blue; break;
             }
 
-            float x = wx * TILE_SIZE;
-            float y = wy * TILE_SIZE;
+            float x = static_cast<float>(wx * TILE_SIZE);
+            float y = static_cast<float>(wy * TILE_SIZE);
 
             vertices.append(sf::Vertex({x, y}, color));
             vertices.append(sf::Vertex({x + TILE_SIZE, y}, color));
