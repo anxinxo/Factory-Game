@@ -45,6 +45,7 @@ Chunk& World::GetChunk(int cx, int cy)
         auto [iter, _] = chunks.emplace(h, Chunk(cx, cy));
 
         WorldGenerator::GenerateChunk(iter->second, seed);
+        WorldGenerator::GenerateResource(iter->second, seed);
 
         return iter->second;
     }

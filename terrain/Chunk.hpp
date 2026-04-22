@@ -3,6 +3,18 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
+enum class RESOURCE
+{   
+    NONE,
+    WOOD,
+    COPPER,
+    IRON,
+    COAL,
+    PLATINUM
+};
+
+
+
 enum class TTYPE
 {   
     NONE,
@@ -32,6 +44,9 @@ struct CELL
     float height;
     float temp;
     float rock_density;
+
+    RESOURCE resource;
+    float amount;
     
     CELL()
     : occupied(false),
@@ -40,7 +55,9 @@ struct CELL
       energy(0.f),
       height(0.f),
       temp(0.f),
-      rock_density(0.f) 
+      rock_density(0.f),
+      resource(RESOURCE::NONE),
+      amount(0.f) 
     {}
 };
 

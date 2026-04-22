@@ -15,6 +15,10 @@ void Renderer::draw_World(sf::RenderWindow& window, World& WORLD, int TILE_SIZE)
     int endY   = static_cast<int>(std::floor(bottomRight.y / TILE_SIZE)) + 1;
 
     sf::VertexArray vertices(sf::Quads);
+    sf::VertexArray res_vertices(sf::Quads);
+
+    const float rSize = TILE_SIZE * 0.35f;
+    const float rOff  = (TILE_SIZE - rSize) * 0.5f;
 
     for (int wy = startY; wy <= endY; ++wy)
     {
@@ -38,10 +42,34 @@ void Renderer::draw_World(sf::RenderWindow& window, World& WORLD, int TILE_SIZE)
             vertices.append(sf::Vertex({x + TILE_SIZE, y}, color));
             vertices.append(sf::Vertex({x + TILE_SIZE, y + TILE_SIZE}, color));
             vertices.append(sf::Vertex({x, y + TILE_SIZE}, color));
+
+            if (cell.resource != RESOURCE::NONE)
+            {
+                sf::Color rc;
+
+                switch (cell.resource)
+                {
+                    case RESOURCE::WOOD:     rc = sf::Color(30,160,30); break;
+                    case RESOURCE::COAL:     rc = sf::Color(40,40,40);   break;
+                    case RESOURCE::IRON:     rc = sf::Color(200,200,210);break;
+                    case RESOURCE::COPPER:   rc = sf::Color(184,115,51); break;
+                    case RESOURCE::PLATINUM: rc = sf::Color(180,220,255);break;
+                    default: break;
+                }
+
+                float rx = x + rOff;
+                float ry = y + rOff;
+
+                res_vertices.append(sf::Vertex({rx, ry}, rc));
+                res_vertices.append(sf::Vertex({rx + rSize, ry}, rc));
+                res_vertices.append(sf::Vertex({rx + rSize, ry + rSize}, rc));
+                res_vertices.append(sf::Vertex({rx, ry + rSize}, rc));
+            }
         }
     }
 
     window.draw(vertices);
+    window.draw(res_vertices);
 }
 
 void Renderer::draw_Hover(sf::RenderWindow& window, HoverSystem& HOVERSYSTEM, int TILE_SIZE)

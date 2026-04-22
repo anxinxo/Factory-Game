@@ -7,4 +7,6 @@ class WorldGenerator
 {
 public:
     static void GenerateChunk(Chunk& chunk, long long seed);
+
+    static void GenerateResource(Chunk& chunk, long long seed);
 };
