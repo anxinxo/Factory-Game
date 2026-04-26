@@ -4,11 +4,12 @@
 #include <string>
 #include <iostream>
 #include <ultilities/MathGrid.hpp>
-#include <rendering/SpriteManager.hpp>
-#include <rendering/Render.hpp>
 #include <core/World.hpp>
+#include <core/InventorySystem.hpp>
 #include <input/MouseWorld.hpp>
 #include <input/HoverSystem.hpp>
+#include <rendering/SpriteManager.hpp>
+#include <rendering/Render.hpp>
 
 class Game
 {
