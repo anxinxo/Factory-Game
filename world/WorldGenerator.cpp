@@ -1,4 +1,4 @@
-#include <terrain/WorldGenerator.hpp>
+#include <world/WorldGenerator.hpp>
 
 void WorldGenerator::GenerateChunk(Chunk& chunk, long long seed)
 {

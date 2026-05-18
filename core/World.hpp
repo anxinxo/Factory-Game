@@ -2,8 +2,8 @@
 
 #include <unordered_map>
 #include <cmath>
-#include <terrain/Chunk.hpp>
-#include <terrain/WorldGenerator.hpp>
+#include <world/Chunk.hpp>
+#include <world/WorldGenerator.hpp>
 
 class World
 {

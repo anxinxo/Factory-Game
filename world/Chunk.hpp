@@ -2,41 +2,14 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
-
-enum class RESOURCE
-{   
-    NONE,
-    WOOD,
-    COPPER,
-    IRON,
-    COAL,
-    PLATINUM
-};
-
-
-
-enum class TTYPE
-{   
-    NONE,
-    GRASS,
-    SAND,
-    ROCK,
-    WATER
-};
-
-enum class BIOME
-{   
-    NONE,
-    PLAINS,
-    DESERT,
-    ROCKY_MOUNTAIN,
-    BEACH,
-    OCEAN
-};
+#include <worldobjects/WorldObject.hpp>
+#include <world/CellView.hpp>
+#include <world/WorldType.hpp>
 
 struct CELL
 {
-    bool occupied;
+    worldobjects* placedObject;
+
     TTYPE CellType;
     BIOME Biome;
     uint8_t energy;
@@ -49,7 +22,7 @@ struct CELL
     float amount;
     
     CELL()
-    : occupied(false),
+    : placedObject(nullptr),
       CellType(TTYPE::NONE),
       Biome(BIOME::NONE),
       energy(0.f),
@@ -69,6 +42,8 @@ public:
     Chunk(int _cx, int _cy);
 
     CELL& Get(int x, int y);
+
+    CellView MakeView(int x, int y) const;
 
     std::string GetCellType(int x, int y);
     std::string GetCellBiome(int x, int y);

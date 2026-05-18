@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/World.hpp>
-#include <terrain/PerlineNoise.hpp>
+#include <world/PerlineNoise.hpp>
 
 class WorldGenerator
 {

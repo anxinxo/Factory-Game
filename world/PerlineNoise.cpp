@@ -1,4 +1,4 @@
-#include <terrain/PerlineNoise.hpp>
+#include <world/PerlineNoise.hpp>
 
 PerlinNoise::PerlinNoise(unsigned int seed) {
     p.resize(256);
